@@ -224,10 +224,10 @@ payload.gd_inning_all <- function(urlz, ...) {
     po <- dplyr::bind_rows(out$po)
     
     # Make of game timeline of atbat and action so we know which atbat to assign an action to.
-    acts <- action %>% dplyr::select(tfs_zulu, inning, inning_side, des)
-    bats <- atbat %>% dplyr::select(start_tfs_zulu, num, inning, inning_side) %>% dplyr::rename(tfs_zulu = start_tfs_zulu)
+    acts <- action %>% dplyr::select(pos2_person_id, inning, inning_side, des)
+    bats <- atbat %>% dplyr::select(start_pos2_person_id, num, inning, inning_side) %>% dplyr::rename(tfs_zulu = start_tfs_zulu)
     events <- dplyr::bind_rows(acts, bats) %>%
-        dplyr::arrange(tfs_zulu) %>% dplyr::mutate(num = as.numeric(num)) %>%
+        dplyr::arrange(pos2_person_id) %>% dplyr::mutate(num = as.numeric(num)) %>%
         tidyr::fill(num, .direction = "up") %>% na.omit()
     
     action <- dplyr::left_join(action, events, by = c("tfs_zulu", "inning", "inning_side", "des"))
